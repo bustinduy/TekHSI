@@ -6,7 +6,7 @@ from tm_devices.drivers import MSO6B
 
 from tekhsi import AcqWaitOn, TekHSIConnect
 
-addr = "192.168.0.1"  # Replace with the IP address of your instrument
+addr = "192.168.2.194"  # Replace with the IP address of your instrument
 
 with DeviceManager(verbose=True) as device_manager:
     scope: MSO6B = device_manager.add_scope(f"{addr}")

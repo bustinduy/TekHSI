@@ -55,6 +55,20 @@ easy-to-use API, `TekHSI` provides a powerful solution for data acquisition and 
 pip install tekhsi
 ```
 
+## Scope Setup
+
+> [!WARNING]
+> Before running any `TekHSI` examples, make sure the oscilloscope High Speed Interface is
+> enabled. By default, the High Speed Interface uses port `5000`. If the feature is disabled, or
+> if you connect to a different service such as the standard SCPI socket, `TekHSIConnect` will not
+> be able to complete the gRPC connection.
+
+The following screenshots show where to verify the High Speed Interface setting on the scope:
+
+![Scope setup](figs/scope.png)
+
+![High Speed Interface settings](figs/high_speed_interface.jpg)
+
 ## Device Support
 
 <div markdown="1" class="custom-table-center-cells device-support-table">

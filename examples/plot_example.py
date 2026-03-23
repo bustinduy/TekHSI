@@ -8,7 +8,7 @@ from tm_data_types import AnalogWaveform
 from tekhsi import AcqWaitOn, TekHSIConnect
 
 source = "ch1"
-address = "192.168.0.1"  # Replace with the IP address of your instrument
+address = "192.168.2.194"  # Replace with the IP address of your instrument
 
 with TekHSIConnect(f"{address}:5000", [source]) as connection:
     # Get one data set to set up plot

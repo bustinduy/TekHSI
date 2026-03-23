@@ -4,7 +4,7 @@ from tm_data_types import AnalogWaveform, write_file
 
 from tekhsi import AcqWaitOn, TekHSIConnect
 
-addr = "192.168.0.1"  # Replace with the IP address of your instrument
+addr = "192.168.2.194"  # Replace with the IP address of your instrument
 
 # Connect to instrument, select channel 1
 with TekHSIConnect(f"{addr}:5000", ["ch1"]) as connect:

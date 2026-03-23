@@ -4,7 +4,7 @@ from tm_data_types import AnalogWaveform, write_file
 
 from tekhsi import TekHSIConnect, WaveformHeader
 
-addr = "192.168.0.1"  # Replace with the IP address of your instrument
+addr = "192.168.2.194"  # Replace with the IP address of your instrument
 
 
 def custom_filter(

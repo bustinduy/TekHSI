@@ -4,7 +4,7 @@ from tm_data_types import AnalogWaveform, write_file
 
 from tekhsi import configure_logging, LoggingLevels, TekHSIConnect
 
-addr = "192.168.0.1"  # Replace with the IP address of your instrument
+addr = "192.168.2.194"  # Replace with the IP address of your instrument
 
 configure_logging(
     log_console_level=LoggingLevels.NONE,  # completely disable console logging
