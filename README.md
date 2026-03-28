@@ -85,6 +85,28 @@ The following screenshots show where to verify the High Speed Interface setting 
 
 </div>
 
+## EPICS PVA / P4P Integration
+
+`TekHSI` waveform data can also be published as EPICS PVA arrays by using the optional
+[`p4p` library](https://epics-base.github.io/p4p/overview.html#overviewpva).
+
+```shell
+pip install tekhsi p4p
+```
+
+The example server [`examples/p4p_analog_waveform_server.py`](examples/p4p_analog_waveform_server.py)
+reads one analog waveform from `TekHSI` and publishes:
+
+1. `mso44b:x` from `waveform.normalized_horizontal_values`
+2. `mso44b:y` from `waveform.normalized_vertical_values`
+
+For Phoebus clients, the repository also includes:
+
+1. [`examples/p4p_analog_waveform_client.bob`](examples/p4p_analog_waveform_client.bob) for a
+    simple array view of both PVs
+2. [`examples/p4p_analog_waveform_xyplot_client.bob`](examples/p4p_analog_waveform_xyplot_client.bob)
+    for an X-Y waveform display with a black background and yellow trace
+
 ## Documentation
 
 See the full documentation at <https://TekHSI.readthedocs.io>
