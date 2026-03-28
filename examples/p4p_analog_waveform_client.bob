@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<display version="2.0.0">
+  <name>TekHSI P4P Client</name>
+  <width>900</width>
+  <height>700</height>
+
+  <widget type="label" version="2.0.0">
+    <name>title</name>
+    <text>TekHSI P4P array client</text>
+    <x>20</x>
+    <y>20</y>
+    <width>260</width>
+    <height>30</height>
+  </widget>
+
+  <widget type="label" version="2.0.0">
+    <name>x_label</name>
+    <text>pva://mso44b:x/value</text>
+    <x>20</x>
+    <y>60</y>
+    <width>260</width>
+    <height>20</height>
+  </widget>
+
+  <widget type="array" version="2.0.0">
+    <name>x_array</name>
+    <x>20</x>
+    <y>85</y>
+    <width>860</width>
+    <height>260</height>
+    <pv_name>pva://mso44b:x/value</pv_name>
+  </widget>
+
+  <widget type="label" version="2.0.0">
+    <name>y_label</name>
+    <text>pva://mso44b:y/value</text>
+    <x>20</x>
+    <y>370</y>
+    <width>260</width>
+    <height>20</height>
+  </widget>
+
+  <widget type="array" version="2.0.0">
+    <name>y_array</name>
+    <x>20</x>
+    <y>395</y>
+    <width>860</width>
+    <height>260</height>
+    <pv_name>pva://mso44b:y/value</pv_name>
+  </widget>
+</display>

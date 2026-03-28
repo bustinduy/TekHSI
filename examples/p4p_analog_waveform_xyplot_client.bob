@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<display version="2.0.0">
+  <name>TekHSI XY Plot Client</name>
+  <width>1000</width>
+  <height>620</height>
+
+  <widget type="label" version="2.0.0">
+    <name>title</name>
+    <text>TekHSI waveform plot</text>
+    <x>20</x>
+    <y>20</y>
+    <width>260</width>
+    <height>30</height>
+    <font>
+      <font name="Header 2" family="Liberation Sans" style="BOLD" size="18.0">
+      </font>
+    </font>
+  </widget>
+
+  <widget type="label" version="2.0.0">
+    <name>pv_info</name>
+    <text>x = pva://mso44b:x/value, y = pva://mso44b:y/value</text>
+    <x>20</x>
+    <y>50</y>
+    <width>420</width>
+    <height>20</height>
+  </widget>
+
+  <widget type="xyplot" version="3.0.0">
+    <name>waveform_plot</name>
+    <x>20</x>
+    <y>85</y>
+    <width>960</width>
+    <height>500</height>
+    <show_toolbar>false</show_toolbar>
+    <show_legend>false</show_legend>
+    <foreground_color>
+      <color red="255" green="255" blue="255">
+      </color>
+    </foreground_color>
+    <background_color>
+      <color red="0" green="0" blue="0">
+      </color>
+    </background_color>
+    <x_axis>
+      <title>Time</title>
+      <autoscale>true</autoscale>
+      <log_scale>false</log_scale>
+      <minimum>0.0</minimum>
+      <maximum>1.0</maximum>
+      <show_grid>false</show_grid>
+      <title_font>
+        <font name="Default Bold" family="Liberation Sans" style="BOLD" size="14.0">
+        </font>
+      </title_font>
+      <scale_font>
+        <font name="Default" family="Liberation Sans" style="REGULAR" size="14.0">
+        </font>
+      </scale_font>
+      <visible>true</visible>
+    </x_axis>
+    <y_axes>
+      <y_axis>
+        <title>Amplitude</title>
+        <autoscale>true</autoscale>
+        <log_scale>false</log_scale>
+        <minimum>-1.0</minimum>
+        <maximum>1.0</maximum>
+        <show_grid>false</show_grid>
+        <title_font>
+          <font name="Default Bold" family="Liberation Sans" style="BOLD" size="14.0">
+          </font>
+        </title_font>
+        <scale_font>
+          <font name="Default" family="Liberation Sans" style="REGULAR" size="14.0">
+          </font>
+        </scale_font>
+        <on_right>false</on_right>
+        <visible>true</visible>
+        <color>
+          <color red="255" green="255" blue="255">
+          </color>
+        </color>
+      </y_axis>
+    </y_axes>
+    <traces>
+      <trace>
+        <name>Waveform</name>
+        <x_pv>pva://mso44b:x/value</x_pv>
+        <y_pv>pva://mso44b:y/value</y_pv>
+        <err_pv></err_pv>
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color red="255" green="255" blue="0">
+          </color>
+        </color>
+        <line_width>2</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>0</point_size>
+        <visible>true</visible>
+      </trace>
+    </traces>
+  </widget>
+</display>
