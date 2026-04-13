@@ -91,7 +91,7 @@ The following screenshots show where to verify the High Speed Interface setting 
 [`p4p` library](https://epics-base.github.io/p4p/overview.html#overviewpva).
 
 For the dedicated setup guide, server example, and Phoebus client files, see
-[`p4p_interface/README_p4p_interface.md`](p4p_interface/README_p4p_interface.md).
+[`p4p_interface/README.md`](p4p_interface/README.md).
 
 ## Documentation
 

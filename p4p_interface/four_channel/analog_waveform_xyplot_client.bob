@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--Saved on 2026-04-13 09:45:18 by ibu-->
 <display version="2.0.0">
   <name>TekHSI 4-Channel XY Plot Client</name>
   <width>1080</width>
   <height>660</height>
-
   <widget type="label" version="2.0.0">
     <name>title</name>
-    <text>TekHSI 4-channel waveform plot</text>
+    <text>Tektronix MSO44B 500MHz 6-25GS/s</text>
     <x>20</x>
     <y>20</y>
     <width>320</width>
@@ -16,24 +16,19 @@
       </font>
     </font>
   </widget>
-
   <widget type="label" version="2.0.0">
     <name>pv_info</name>
     <text>PVs use pva://mso44b:chN:x/value and pva://mso44b:chN:y/value, with N = 1..4</text>
     <x>20</x>
     <y>50</y>
     <width>760</width>
-    <height>20</height>
   </widget>
-
   <widget type="xyplot" version="3.0.0">
     <name>waveform_plot</name>
     <x>20</x>
     <y>85</y>
     <width>1040</width>
     <height>540</height>
-    <show_toolbar>false</show_toolbar>
-    <show_legend>true</show_legend>
     <foreground_color>
       <color red="255" green="255" blue="255">
       </color>
@@ -43,12 +38,12 @@
       </color>
     </background_color>
     <x_axis>
-      <title>Time</title>
+      <title>Time (s)</title>
       <autoscale>true</autoscale>
       <log_scale>false</log_scale>
       <minimum>0.0</minimum>
       <maximum>1.0</maximum>
-      <show_grid>false</show_grid>
+      <show_grid>true</show_grid>
       <title_font>
         <font name="Default Bold" family="Liberation Sans" style="BOLD" size="14.0">
         </font>
@@ -61,12 +56,12 @@
     </x_axis>
     <y_axes>
       <y_axis>
-        <title>Amplitude</title>
+        <title>Amplitude (V)</title>
         <autoscale>true</autoscale>
         <log_scale>false</log_scale>
         <minimum>-1.0</minimum>
         <maximum>1.0</maximum>
-        <show_grid>false</show_grid>
+        <show_grid>true</show_grid>
         <title_font>
           <font name="Default Bold" family="Liberation Sans" style="BOLD" size="14.0">
           </font>
