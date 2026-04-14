@@ -87,22 +87,22 @@ python3 p4p_interface/four_channel/analog_waveform_server.py
 
 ## Math Channel Example
 
+
 ![](figs/math_channel_css_boy_Screenshot.png)
 
 Files:
 
 1. [`math_channel/list_available_names.py`](math_channel/list_available_names.py)
 2. [`math_channel/inspect_math_fft_sources.py`](math_channel/inspect_math_fft_sources.py)
-3. [`math_channel/tekhsi_utils.py`](math_channel/tekhsi_utils.py)
-4. [`math_channel/publish_available_waveforms_server.py`](math_channel/publish_available_waveforms_server.py)
-5. [`math_channel/generate_available_waveform_xyplot_client.py`](math_channel/generate_available_waveform_xyplot_client.py)
-6. [`math_channel/available_waveform_xyplot_client.bob`](math_channel/available_waveform_xyplot_client.bob)
+3. [`math_channel/publish_available_waveforms_server.py`](math_channel/publish_available_waveforms_server.py)
+4. [`math_channel/generate_available_waveform_xyplot_client.py`](math_channel/generate_available_waveform_xyplot_client.py)
+5. [`math_channel/available_waveform_xyplot_client.bob`](math_channel/available_waveform_xyplot_client.bob)
 
 The helpers in this folder print the source names currently exposed by the TekHSI server and group them into
 `channels`, `math`, `measurements`, `iq`, and `other`.
 
-[`tekhsi_utils.py`](math_channel/tekhsi_utils.py) centralizes the reusable TekHSI discovery and
-acquisition helpers so the example scripts do not duplicate connection logic.
+It is meant as a small building block for later examples where you may want to publish only the
+currently active math traces or measurement-related sources through P4P.
 
 Run it from the repository root with:
 
@@ -174,8 +174,7 @@ with TekHSIConnect(address) as connection:
 
 ```
 
-
-## Why This Layout
+## Example folders
 
 Organizing by `single_channel` and `four_channel` is usually a better habit than splitting into
 `python/` and `css_boy/` folders here because:

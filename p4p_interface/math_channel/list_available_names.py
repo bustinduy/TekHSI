@@ -10,45 +10,9 @@ from __future__ import annotations
 
 import argparse
 
-from collections.abc import Iterable
-
 import grpc
 
-from tekhsi import TekHSIConnect
-
-DEFAULT_SCOPE_ADDRESS = "192.168.2.194:5000"
-
-
-def available_names(scope_address: str) -> list[str]:
-    """Return the source names currently exposed by the TekHSI server."""
-    with TekHSIConnect(scope_address) as connection:
-        return sorted(connection.available_symbols, key=str.lower)
-
-
-def group_available_names(names: Iterable[str]) -> dict[str, list[str]]:
-    """Group names by common Tek scope source prefixes."""
-    grouped_names = {
-        "channels": [],
-        "math": [],
-        "measurements": [],
-        "iq": [],
-        "other": [],
-    }
-
-    for name in sorted(names, key=str.lower):
-        lower_name = name.lower()
-        if "_iq" in lower_name:
-            grouped_names["iq"].append(name)
-        elif lower_name.startswith("ch"):
-            grouped_names["channels"].append(name)
-        elif lower_name.startswith("math"):
-            grouped_names["math"].append(name)
-        elif lower_name.startswith(("meas", "measurement")):
-            grouped_names["measurements"].append(name)
-        else:
-            grouped_names["other"].append(name)
-
-    return {group: values for group, values in grouped_names.items() if values}
+from tekhsi_utils import DEFAULT_SCOPE_ADDRESS, available_names, group_source_names
 
 
 def print_available_names(scope_address: str) -> int:
@@ -71,7 +35,7 @@ def print_available_names(scope_address: str) -> int:
         print(f"  {name}")
 
     print("\nGrouped view:")
-    for group_name, values in group_available_names(names).items():
+    for group_name, values in group_source_names(names).items():
         print(f"  {group_name}:")
         for value in values:
             print(f"    {value}")

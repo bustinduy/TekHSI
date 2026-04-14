@@ -8,7 +8,7 @@ import argparse
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
-from available_waveform_common import (
+from tekhsi_utils import (
     DEFAULT_BOB_OUTPUT,
     DEFAULT_PV_PREFIX,
     DEFAULT_SCOPE_ADDRESS,

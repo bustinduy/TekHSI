@@ -27,13 +27,15 @@ import numpy as np
 
 from tm_data_types import AnalogWaveform
 
-from tekhsi import AcqWaitOn, TekHSIConnect
+from tekhsi import TekHSIConnect
 
-from available_waveform_common import (
+from tekhsi_utils import (
     DEFAULT_PV_PREFIX,
     DEFAULT_SCOPE_ADDRESS,
+    active_selected_source_names,
     available_analog_source_names,
     pv_name,
+    snapshot_waveforms,
 )
 
 try:
@@ -119,17 +121,7 @@ def updater(
     """Read currently visible analog waveforms and publish them as P4P PVs."""
     with TekHSIConnect(scope_address, activesymbols=list(source_names)) as connection:
         while True:
-            available_lookup = {
-                source_name.lower(): source_name
-                for source_name in connection.available_symbols
-            }
-            active_source_names = [
-                source_name
-                for source_name in source_names
-                if source_name.lower() in available_lookup
-            ]
-
-            connection.active_symbols(active_source_names)
+            active_source_names = active_selected_source_names(connection, source_names)
 
             for source_name in source_names:
                 is_active = source_name in active_source_names
@@ -141,11 +133,7 @@ def updater(
                 time.sleep(POLL_DELAY_SECONDS)
                 continue
 
-            with connection.access_data(AcqWaitOn.NewData):
-                waveforms = {
-                    source_name: connection.get_data(source_name)
-                    for source_name in active_source_names
-                }
+            waveforms = snapshot_waveforms(connection, active_source_names)
 
             with state_lock:
                 current_show_state = dict(show_state)

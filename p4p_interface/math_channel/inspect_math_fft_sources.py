@@ -15,8 +15,14 @@ from collections.abc import Iterable
 
 import grpc
 
-from list_available_names import DEFAULT_SCOPE_ADDRESS, group_available_names
 from tekhsi import AcqWaitOn, TekHSIConnect
+from tekhsi_utils import (
+    DEFAULT_SCOPE_ADDRESS,
+    active_selected_source_names,
+    describe_waveform,
+    group_source_names,
+    snapshot_waveforms,
+)
 
 DEFAULT_CANDIDATES = ("math2", "ch2_iq")
 
@@ -34,35 +40,6 @@ def unique_preserving_order(values: Iterable[str]) -> list[str]:
     return result
 
 
-def describe_waveform(waveform: object) -> str:
-    """Build a short human-readable description for one waveform object."""
-    parts = [f"type={type(waveform).__name__}"]
-
-    for attr_name in ("y_axis_values", "y_axis_byte_values", "interleaved_iq_axis_values"):
-        axis_values = getattr(waveform, attr_name, None)
-        if axis_values is not None:
-            parts.append(f"samples={len(axis_values)}")
-            break
-
-    meta_info = getattr(waveform, "meta_info", None)
-    if meta_info is not None:
-        fft_length = getattr(meta_info, "iq_fft_length", None)
-        center_frequency = getattr(meta_info, "iq_center_frequency", None)
-        resolution_bandwidth = getattr(meta_info, "iq_resolution_bandwidth", None)
-        window_type = getattr(meta_info, "iq_window_type", None)
-
-        if fft_length is not None:
-            parts.append(f"fft_length={int(fft_length)}")
-        if center_frequency is not None:
-            parts.append(f"center_frequency={center_frequency:g}")
-        if resolution_bandwidth is not None:
-            parts.append(f"rbw={resolution_bandwidth:g}")
-        if window_type:
-            parts.append(f"window={window_type}")
-
-    return ", ".join(parts)
-
-
 def print_available_sources(names: list[str]) -> None:
     """Print the available TekHSI names in flat and grouped form."""
     if not names:
@@ -74,7 +51,7 @@ def print_available_sources(names: list[str]) -> None:
         print(f"  {name}")
 
     print("\nGrouped view:")
-    for group_name, values in group_available_names(names).items():
+    for group_name, values in group_source_names(names).items():
         print(f"  {group_name}:")
         for value in values:
             print(f"    {value}")
@@ -101,17 +78,18 @@ def inspect_sources(scope_address: str, requested_candidates: list[str]) -> int:
                 print("  No candidate sources to inspect.")
                 return 0
 
-            available_candidates = [
-                available_lookup[candidate.lower()]
-                for candidate in candidates
-                if candidate.lower() in available_lookup
-            ]
+            available_candidates = active_selected_source_names(connection, candidates)
             waveforms: dict[str, object | None] = {}
             if available_candidates:
                 connection.force_sequence()
-                with connection.access_data(AcqWaitOn.AnyAcq):
-                    for source_name in available_candidates:
-                        waveforms[source_name.lower()] = connection.get_data(source_name)
+                waveforms = {
+                    source_name.lower(): waveform
+                    for source_name, waveform in snapshot_waveforms(
+                        connection,
+                        available_candidates,
+                        wait_on=AcqWaitOn.AnyAcq,
+                    ).items()
+                }
 
             for candidate in candidates:
                 key = candidate.lower()
