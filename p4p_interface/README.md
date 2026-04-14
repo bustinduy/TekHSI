@@ -16,7 +16,9 @@ examples evolve.
 2. [`four_channel/`](four_channel/)
    Four-waveform synchronized acquisition example with its Python server and matching X-Y plot
    display
-3. [`figs/`](figs/)
+3. [`math_channel/`](math_channel/)
+   Discovery helpers plus a dynamic visible-waveform P4P example with a generated Phoebus client
+4. [`figs/`](figs/)
    Screenshots used by this README
 
 ## Requirements
@@ -82,6 +84,53 @@ Run it from the repository root with:
 ```shell
 python3 p4p_interface/four_channel/analog_waveform_server.py
 ```
+
+## Math Channel / Visible Waveforms
+
+Files:
+
+1. [`math_channel/list_available_names.py`](math_channel/list_available_names.py)
+2. [`math_channel/inspect_math_fft_sources.py`](math_channel/inspect_math_fft_sources.py)
+3. [`math_channel/publish_available_waveforms_server.py`](math_channel/publish_available_waveforms_server.py)
+4. [`math_channel/generate_available_waveform_xyplot_client.py`](math_channel/generate_available_waveform_xyplot_client.py)
+5. [`math_channel/available_waveform_xyplot_client.bob`](math_channel/available_waveform_xyplot_client.bob)
+
+The helpers in this folder print the source names currently exposed by the TekHSI server and group them into
+`channels`, `math`, `measurements`, `iq`, and `other`.
+
+It is meant as a small building block for later examples where you may want to publish only the
+currently active math traces or measurement-related sources through P4P.
+
+Run it from the repository root with:
+
+```shell
+python3 p4p_interface/math_channel/list_available_names.py --address 192.168.2.194:5000
+```
+
+To check whether a math trace or FFT is exposed under names such as `math2` or `ch2_iq`, run:
+
+```shell
+python3 p4p_interface/math_channel/inspect_math_fft_sources.py --address 192.168.2.194:5000
+```
+
+To publish only the currently visible analog traces and expose a writable `show` PV per source,
+run:
+
+```shell
+python3 p4p_interface/math_channel/publish_available_waveforms_server.py
+```
+
+To generate a Phoebus `.bob` client with one checkbox per discovered source, run:
+
+```shell
+python3 p4p_interface/math_channel/generate_available_waveform_xyplot_client.py
+```
+
+The generated display writes to `pva://mso44b:<source>:show/value`. The server reacts by publishing
+empty arrays for hidden traces, so the plot updates without Phoebus rules.
+
+If you change which traces are visible on the scope, regenerate the `.bob` file and restart the
+server so the published source set matches the new scope state.
 
 ## Configuration
 
