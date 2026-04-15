@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Generated for ch1, ch2, ch3, ch4, math1-->
+<!--Generated for ch1, ch2, ch2_iq, ch3, ch4, math1-->
 <display version="2.0.0">
   <name>TekHSI Available Waveforms</name>
   <width>1280</width>
-  <height>760</height>
+  <height>820</height>
   <widget type="label" version="2.0.0">
     <name>title</name>
     <text>TekHSI Available Waveforms</text>
@@ -17,18 +17,18 @@
   </widget>
   <widget type="label" version="2.0.0">
     <name>subtitle</name>
-    <text>Scope 192.168.2.194:5000. The server publishes currently visible analog traces under pva://mso44b:&lt;source&gt;:x|y and a checkbox PV at pva://mso44b:&lt;source&gt;:show/value.</text>
+    <text>Scope 192.168.2.194:5000. The top plot shows IQ/spectrum traces in frequency vs dB, and the bottom plot shows time-domain waveforms. pva://mso44b:&lt;source&gt;:x|y and a checkbox PV at pva://mso44b:&lt;source&gt;:show/value.</text>
     <x>20</x>
     <y>50</y>
     <width>1220</width>
-    <height>42</height>
+    <height>48</height>
     <font>
       <font name="Default" family="Liberation Sans" style="REGULAR" size="13.0" />
     </font>
   </widget>
   <widget type="label" version="2.0.0">
     <name>controls_title</name>
-    <text>Visible Traces</text>
+    <text>Visible Sources</text>
     <x>20</x>
     <y>100</y>
     <width>180</width>
@@ -39,13 +39,35 @@
   </widget>
   <widget type="label" version="2.0.0">
     <name>controls_help</name>
-    <text>Uncheck a box to hide that trace from the plot.</text>
+    <text>Uncheck a box to hide that source from its plot.</text>
     <x>20</x>
     <y>118</y>
     <width>210</width>
     <height>18</height>
     <font>
       <font name="Default" family="Liberation Sans" style="REGULAR" size="12.0" />
+    </font>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>iq_plot_title</name>
+    <text>IQ / Spectrum</text>
+    <x>245</x>
+    <y>96</y>
+    <width>260</width>
+    <height>24</height>
+    <font>
+      <font name="Header 2" family="Liberation Sans" style="BOLD" size="15.0" />
+    </font>
+  </widget>
+  <widget type="label" version="2.0.0">
+    <name>waveform_plot_title</name>
+    <text>Waveforms</text>
+    <x>245</x>
+    <y>408</y>
+    <width>260</width>
+    <height>24</height>
+    <font>
+      <font name="Header 2" family="Liberation Sans" style="BOLD" size="15.0" />
     </font>
   </widget>
   <widget type="checkbox" version="2.0.0">
@@ -83,15 +105,15 @@
     </font>
   </widget>
   <widget type="checkbox" version="2.0.0">
-    <name>show_ch3</name>
+    <name>show_ch2_iq</name>
     <x>20</x>
     <y>203</y>
     <width>190</width>
     <height>28</height>
-    <pv_name>pva://mso44b:ch3:show/value</pv_name>
-    <label>CH3</label>
+    <pv_name>pva://mso44b:ch2_iq:show/value</pv_name>
+    <label>CH2_IQ</label>
     <auto_size>false</auto_size>
-    <tooltip>Check to show ch3; uncheck to hide it from the XY plot.</tooltip>
+    <tooltip>Check to show ch2_iq; uncheck to hide it from the XY plot.</tooltip>
     <foreground_color>
       <color red="255" green="0" blue="255" />
     </foreground_color>
@@ -100,15 +122,15 @@
     </font>
   </widget>
   <widget type="checkbox" version="2.0.0">
-    <name>show_ch4</name>
+    <name>show_ch3</name>
     <x>20</x>
     <y>237</y>
     <width>190</width>
     <height>28</height>
-    <pv_name>pva://mso44b:ch4:show/value</pv_name>
-    <label>CH4</label>
+    <pv_name>pva://mso44b:ch3:show/value</pv_name>
+    <label>CH3</label>
     <auto_size>false</auto_size>
-    <tooltip>Check to show ch4; uncheck to hide it from the XY plot.</tooltip>
+    <tooltip>Check to show ch3; uncheck to hide it from the XY plot.</tooltip>
     <foreground_color>
       <color red="0" green="255" blue="0" />
     </foreground_color>
@@ -117,15 +139,15 @@
     </font>
   </widget>
   <widget type="checkbox" version="2.0.0">
-    <name>show_math1</name>
+    <name>show_ch4</name>
     <x>20</x>
     <y>271</y>
     <width>190</width>
     <height>28</height>
-    <pv_name>pva://mso44b:math1:show/value</pv_name>
-    <label>MATH1</label>
+    <pv_name>pva://mso44b:ch4:show/value</pv_name>
+    <label>CH4</label>
     <auto_size>false</auto_size>
-    <tooltip>Check to show math1; uncheck to hide it from the XY plot.</tooltip>
+    <tooltip>Check to show ch4; uncheck to hide it from the XY plot.</tooltip>
     <foreground_color>
       <color red="255" green="128" blue="0" />
     </foreground_color>
@@ -133,12 +155,96 @@
       <font name="Default Bold" family="Liberation Sans" style="BOLD" size="14.0" />
     </font>
   </widget>
+  <widget type="checkbox" version="2.0.0">
+    <name>show_math1</name>
+    <x>20</x>
+    <y>305</y>
+    <width>190</width>
+    <height>28</height>
+    <pv_name>pva://mso44b:math1:show/value</pv_name>
+    <label>MATH1</label>
+    <auto_size>false</auto_size>
+    <tooltip>Check to show math1; uncheck to hide it from the XY plot.</tooltip>
+    <foreground_color>
+      <color red="255" green="64" blue="64" />
+    </foreground_color>
+    <font>
+      <font name="Default Bold" family="Liberation Sans" style="BOLD" size="14.0" />
+    </font>
+  </widget>
+  <widget type="xyplot" version="3.0.0">
+    <name>iq_plot</name>
+    <x>245</x>
+    <y>126</y>
+    <width>1010</width>
+    <height>250</height>
+    <foreground_color>
+      <color red="255" green="255" blue="255" />
+    </foreground_color>
+    <background_color>
+      <color red="0" green="0" blue="0" />
+    </background_color>
+    <x_axis>
+      <title>Frequency (Hz)</title>
+      <autoscale>true</autoscale>
+      <log_scale>false</log_scale>
+      <minimum>0.0</minimum>
+      <maximum>1.0</maximum>
+      <show_grid>true</show_grid>
+      <title_font>
+        <font name="Default Bold" family="Liberation Sans" style="BOLD" size="14.0" />
+      </title_font>
+      <scale_font>
+        <font name="Default" family="Liberation Sans" style="REGULAR" size="14.0" />
+      </scale_font>
+      <visible>true</visible>
+    </x_axis>
+    <y_axes>
+      <y_axis>
+        <title>Level (dB)</title>
+        <autoscale>true</autoscale>
+        <log_scale>false</log_scale>
+        <minimum>-1.0</minimum>
+        <maximum>1.0</maximum>
+        <show_grid>true</show_grid>
+        <title_font>
+          <font name="Default Bold" family="Liberation Sans" style="BOLD" size="14.0" />
+        </title_font>
+        <scale_font>
+          <font name="Default" family="Liberation Sans" style="REGULAR" size="14.0" />
+        </scale_font>
+        <on_right>false</on_right>
+        <visible>true</visible>
+        <color>
+          <color red="255" green="255" blue="255" />
+        </color>
+      </y_axis>
+    </y_axes>
+    <traces>
+      <trace>
+        <name>CH2_IQ</name>
+        <x_pv>pva://mso44b:ch2_iq:x/value</x_pv>
+        <y_pv>pva://mso44b:ch2_iq:y/value</y_pv>
+        <err_pv />
+        <axis>0</axis>
+        <trace_type>1</trace_type>
+        <color>
+          <color red="255" green="0" blue="255" />
+        </color>
+        <line_width>2</line_width>
+        <line_style>0</line_style>
+        <point_type>0</point_type>
+        <point_size>0</point_size>
+        <visible>true</visible>
+      </trace>
+    </traces>
+  </widget>
   <widget type="xyplot" version="3.0.0">
     <name>waveform_plot</name>
     <x>245</x>
-    <y>110</y>
+    <y>438</y>
     <width>1010</width>
-    <height>620</height>
+    <height>310</height>
     <foreground_color>
       <color red="255" green="255" blue="255" />
     </foreground_color>
@@ -162,7 +268,7 @@
     </x_axis>
     <y_axes>
       <y_axis>
-        <title>Amplitude</title>
+        <title>Voltage (V)</title>
         <autoscale>true</autoscale>
         <log_scale>false</log_scale>
         <minimum>-1.0</minimum>
@@ -222,7 +328,7 @@
         <axis>0</axis>
         <trace_type>1</trace_type>
         <color>
-          <color red="255" green="0" blue="255" />
+          <color red="0" green="255" blue="0" />
         </color>
         <line_width>2</line_width>
         <line_style>0</line_style>
@@ -238,7 +344,7 @@
         <axis>0</axis>
         <trace_type>1</trace_type>
         <color>
-          <color red="0" green="255" blue="0" />
+          <color red="255" green="128" blue="0" />
         </color>
         <line_width>2</line_width>
         <line_style>0</line_style>
@@ -254,7 +360,7 @@
         <axis>0</axis>
         <trace_type>1</trace_type>
         <color>
-          <color red="255" green="128" blue="0" />
+          <color red="255" green="64" blue="64" />
         </color>
         <line_width>2</line_width>
         <line_style>0</line_style>

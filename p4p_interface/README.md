@@ -34,7 +34,9 @@ examples evolve.
 ## Installation
 
 ```shell
-pip install tekhsi p4p
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install tekhsi p4p
 ```
 
 ## Single-Channel Example
@@ -87,50 +89,77 @@ python3 p4p_interface/four_channel/analog_waveform_server.py
 
 ## Math Channel Example
 
-![](figs/math_channel_css_boy_Screenshot.png)
+![](figs/math_channel_css_boy_Screenshot_02.png)
 
 Files:
 
 1. [`math_channel/list_available_names.py`](math_channel/list_available_names.py)
 2. [`math_channel/inspect_math_fft_sources.py`](math_channel/inspect_math_fft_sources.py)
-3. [`math_channel/tekhsi_utils.py`](math_channel/tekhsi_utils.py)
-4. [`math_channel/publish_available_waveforms_server.py`](math_channel/publish_available_waveforms_server.py)
-5. [`math_channel/generate_available_waveform_xyplot_client.py`](math_channel/generate_available_waveform_xyplot_client.py)
-6. [`math_channel/available_waveform_xyplot_client.bob`](math_channel/available_waveform_xyplot_client.bob)
+3. [`math_channel/run_available_waveforms.sh`](math_channel/run_available_waveforms.sh)
+4. [`math_channel/tekhsi_utils.py`](math_channel/tekhsi_utils.py)
+5. [`math_channel/publish_available_waveforms_server.py`](math_channel/publish_available_waveforms_server.py)
+6. [`math_channel/generate_available_waveform_xyplot_client.py`](math_channel/generate_available_waveform_xyplot_client.py)
+7. [`math_channel/available_waveform_xyplot_client.bob`](math_channel/available_waveform_xyplot_client.bob)
 
 The helpers in this folder print the source names currently exposed by the TekHSI server and group them into
 `channels`, `math`, `measurements`, `iq`, and `other`.
 
 [`tekhsi_utils.py`](math_channel/tekhsi_utils.py) centralizes the reusable TekHSI discovery and
-acquisition helpers so the example scripts do not duplicate connection logic.
+acquisition helpers so the example scripts do not duplicate connection logic. In particular, it
+includes:
+
+1. `available_names()` for raw TekHSI discovery
+2. `available_xy_source_names()` for sources that can be published on the shared XY plot
+3. `waveform_to_xy_arrays()` for converting both `AnalogWaveform` and `IQWaveform` objects into
+   plain `x/y` arrays
 
 Run it from the repository root with:
 
 ```shell
-python3 p4p_interface/math_channel/list_available_names.py --address 192.168.2.194:5000
+source .venv/bin/activate
+python p4p_interface/math_channel/list_available_names.py --address 192.168.2.194:5000
 ```
 
 To check whether a math trace or FFT is exposed under names such as `math2` or `ch2_iq`, run:
 
 ```shell
-python3 p4p_interface/math_channel/inspect_math_fft_sources.py --address 192.168.2.194:5000
+source .venv/bin/activate
+python p4p_interface/math_channel/inspect_math_fft_sources.py --address 192.168.2.194:5000
 ```
 
-To publish only the currently visible analog traces and expose a writable `show` PV per source,
-run:
+To publish the currently visible channels, math traces, and any available IQ/spectrum sources such
+as `ch2_iq`, and expose a writable `show` PV per source, run:
 
 ```shell
-python3 p4p_interface/math_channel/publish_available_waveforms_server.py
+source .venv/bin/activate
+python p4p_interface/math_channel/publish_available_waveforms_server.py
 ```
 
 To generate a Phoebus `.bob` client with one checkbox per discovered source, run:
 
 ```shell
-python3 p4p_interface/math_channel/generate_available_waveform_xyplot_client.py
+source .venv/bin/activate
+python p4p_interface/math_channel/generate_available_waveform_xyplot_client.py
 ```
 
+To run the most common sequence in one step, use:
+
+```shell
+bash p4p_interface/math_channel/run_available_waveforms.sh
+```
+
+The launcher script activates `.venv`, lists the currently available TekHSI sources, regenerates the
+Phoebus display, and then starts the P4P server in the foreground.
+
 The generated display writes to `pva://mso44b:<source>:show/value`. The server reacts by publishing
-empty arrays for hidden traces, so the plot updates without Phoebus rules.
+empty arrays for hidden traces, so the plot updates without Phoebus rules. IQ sources are projected
+into a simple frequency-domain magnitude spectrum so they can be published through the same `x/y`
+PV structure as analog and math traces.
+
+The generated Phoebus interface uses two stacked plots:
+
+1. top plot for `*_iq` sources with frequency on the x axis and dB on the y axis
+2. bottom plot for analog and math waveforms with time on the x axis and volts on the y axis
 
 If you change which traces are visible on the scope, regenerate the `.bob` file and restart the
 server so the published source set matches the new scope state.

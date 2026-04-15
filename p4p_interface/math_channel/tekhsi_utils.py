@@ -6,6 +6,10 @@ from __future__ import annotations
 from collections.abc import Iterable
 from pathlib import Path
 
+import numpy as np
+
+from tm_data_types import AnalogWaveform, IQWaveform
+
 from tekhsi import AcqWaitOn, TekHSIConnect
 
 DEFAULT_SCOPE_ADDRESS = "192.168.2.194:5000"
@@ -56,23 +60,36 @@ def group_source_names(names: Iterable[str]) -> dict[str, list[str]]:
     return {group: values for group, values in grouped_names.items() if values}
 
 
-def is_publishable_analog_source(source_name: str) -> bool:
-    """Return True for analog scope traces that fit the XY plot example."""
+def is_iq_source(source_name: str) -> bool:
+    """Return True when the TekHSI source name represents an IQ/spectrum source."""
+    return "_iq" in source_name.lower()
+
+
+def is_publishable_xy_source(source_name: str) -> bool:
+    """Return True for waveform sources that fit the shared XY-plot example."""
     lower_name = source_name.lower()
-    if "_iq" in lower_name:
-        return False
     if "_d" in lower_name:
         return False
     return lower_name.startswith("ch") or lower_name.startswith("math")
 
 
-def available_analog_source_names(scope_address: str) -> list[str]:
-    """Return visible scope traces that fit the analog XY plot example."""
+def available_xy_source_names(scope_address: str) -> list[str]:
+    """Return visible waveform sources that fit the shared XY-plot example."""
     return [
         source_name
         for source_name in available_names(scope_address)
-        if is_publishable_analog_source(source_name)
+        if is_publishable_xy_source(source_name)
     ]
+
+
+def is_publishable_analog_source(source_name: str) -> bool:
+    """Backward-compatible alias for the XY source filter used by older examples."""
+    return is_publishable_xy_source(source_name)
+
+
+def available_analog_source_names(scope_address: str) -> list[str]:
+    """Backward-compatible alias for the visible XY source helper."""
+    return available_xy_source_names(scope_address)
 
 
 def active_selected_source_names(
@@ -105,6 +122,52 @@ def snapshot_waveforms(
             source_name: connection.get_data(source_name)
             for source_name in source_names
         }
+
+
+def waveform_to_xy_arrays(
+    waveform: object,
+) -> tuple[np.ndarray, np.ndarray] | None:
+    """Normalize supported waveform objects into float64 x/y arrays.
+
+    Analog and math traces are published in the time domain. IQ sources are
+    converted into a simple frequency-domain magnitude spectrum in dB so they
+    can be displayed on a dedicated top plot in the generated Phoebus client.
+    """
+    if isinstance(waveform, AnalogWaveform):
+        return (
+            np.asarray(waveform.normalized_horizontal_values, dtype=np.float64),
+            np.asarray(waveform.normalized_vertical_values, dtype=np.float64),
+        )
+
+    if isinstance(waveform, IQWaveform):
+        iq_values = np.asarray(waveform.normalized_vertical_values, dtype=np.complex128)
+        if iq_values.size == 0:
+            empty = np.array([], dtype=np.float64)
+            return empty, empty
+
+        meta_info = getattr(waveform, "meta_info", None)
+        fft_length = int(getattr(meta_info, "iq_fft_length", 0) or iq_values.size)
+        fft_length = max(fft_length, 1)
+        sample_rate = float(getattr(meta_info, "iq_sample_rate", 0.0) or 0.0)
+        center_frequency = float(getattr(meta_info, "iq_center_frequency", 0.0) or 0.0)
+
+        spectrum = np.fft.fftshift(np.fft.fft(iq_values, n=fft_length))
+        magnitude = np.maximum(np.abs(spectrum), np.finfo(np.float64).tiny)
+        db_values = 20.0 * np.log10(magnitude)
+
+        if sample_rate > 0.0:
+            frequency_axis = center_frequency + np.fft.fftshift(
+                np.fft.fftfreq(fft_length, d=1.0 / sample_rate),
+            )
+        else:
+            frequency_axis = np.arange(fft_length, dtype=np.float64)
+
+        return (
+            np.asarray(frequency_axis, dtype=np.float64),
+            np.asarray(db_values, dtype=np.float64),
+        )
+
+    return None
 
 
 def describe_waveform(waveform: object) -> str:

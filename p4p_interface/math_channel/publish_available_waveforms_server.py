@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Publish currently visible TekHSI analog traces as P4P array PVs.
+"""Publish currently visible TekHSI waveform traces as P4P array PVs.
 
 This example uses the `available_names()` discovery helper at startup to find
 which visible scope traces should be published. For each discovered source it
@@ -13,6 +13,9 @@ creates:
 The generated Phoebus display writes to the `show` PV. When a source is hidden
 from the display, the server publishes empty arrays so the trace disappears from
 the plot without needing Phoebus display rules.
+
+Analog and math traces are published in the time domain. IQ traces are converted
+into simple frequency-domain magnitude spectra in dB before they are published.
 """
 
 from __future__ import annotations
@@ -25,17 +28,16 @@ from typing import Any
 
 import numpy as np
 
-from tm_data_types import AnalogWaveform
-
 from tekhsi import TekHSIConnect
 
 from tekhsi_utils import (
     DEFAULT_PV_PREFIX,
     DEFAULT_SCOPE_ADDRESS,
     active_selected_source_names,
-    available_analog_source_names,
+    available_xy_source_names,
     pv_name,
     snapshot_waveforms,
+    waveform_to_xy_arrays,
 )
 
 try:
@@ -118,7 +120,7 @@ def updater(
     show_state: dict[str, bool],
     state_lock: Lock,
 ) -> None:
-    """Read currently visible analog waveforms and publish them as P4P PVs."""
+    """Read currently visible waveforms and publish them as P4P PVs."""
     with TekHSIConnect(scope_address, activesymbols=list(source_names)) as connection:
         while True:
             active_source_names = active_selected_source_names(connection, source_names)
@@ -144,29 +146,23 @@ def updater(
                     continue
 
                 waveform = waveforms.get(source_name)
-                if not isinstance(waveform, AnalogWaveform):
+                xy_arrays = waveform_to_xy_arrays(waveform)
+                if xy_arrays is None:
                     clear_trace(channel_pvs[source_name])
                     continue
 
-                x_values = np.asarray(
-                    waveform.normalized_horizontal_values,
-                    dtype=np.float64,
-                )
-                y_values = np.asarray(
-                    waveform.normalized_vertical_values,
-                    dtype=np.float64,
-                )
+                x_values, y_values = xy_arrays
 
                 channel_pvs[source_name].x.post(x_values)
                 channel_pvs[source_name].y.post(y_values)
 
 
 if __name__ == "__main__":
-    source_names = available_analog_source_names(DEFAULT_SCOPE_ADDRESS)
+    source_names = available_xy_source_names(DEFAULT_SCOPE_ADDRESS)
     if not source_names:
         raise SystemExit(
-            f"No visible analog sources found on {DEFAULT_SCOPE_ADDRESS}. "
-            "Enable one or more channels or math traces, then try again."
+            f"No visible XY-plottable sources found on {DEFAULT_SCOPE_ADDRESS}. "
+            "Enable one or more channels, math traces, or IQ traces, then try again."
         )
 
     state_lock = Lock()
